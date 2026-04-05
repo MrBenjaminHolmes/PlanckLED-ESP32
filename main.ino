@@ -11,16 +11,19 @@ void setup() {
 }
 
 void loop() {
+  ledcWrite(pwmChannel, 0);
+  delay(10000); //Allow for time to turn off monitor
   for(int pwm = 0; pwm <= 255; pwm++) {
     ledcWrite(pwmChannel, pwm);
     delay(20);
     unsigned long start = millis();
-    while(millis() - start < 1000){
+    while(millis() - start < 100){
       //read sensor code
       Serial.print(pwm);
       Serial.print(",");
-      Serial.println(pwm);//this will be sensor reading
+      Serial.println(random(500));//this will be sensor reading
     }
-    while(true);
   }
+  ledcWrite(pwmChannel, 0);
+  while(true);
 }
