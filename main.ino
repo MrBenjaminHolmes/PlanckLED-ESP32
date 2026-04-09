@@ -1,29 +1,36 @@
-const int ledPin = 5;
-const int pwmChannel = 0;
-const int freq = 5000;
-const int resolution = 8;
-
-
 void setup() {
-  Serial.begin(115200);        // start serial communication
-  ledcSetup(pwmChannel, freq, resolution);
-  ledcAttachPin(ledPin, pwmChannel);
+  Serial.begin(9600);
+}
+
+float readAnalog(int pin, int samples) {
+  long sum = 0;
+  for (int i = 0; i < samples; i++) {
+    sum += analogRead(pin);
+    delay(2);
+  }
+  float avg = sum / float(samples);
+  return avg * (3.3 / 4095.0);
 }
 
 void loop() {
-  ledcWrite(pwmChannel, 0);
-  delay(10000); //Allow for time to turn off monitor
-  for(int pwm = 0; pwm <= 255; pwm++) {
-    ledcWrite(pwmChannel, pwm);
-    delay(20);
-    unsigned long start = millis();
-    while(millis() - start < 100){
-      //read sensor code
-      Serial.print(pwm);
+
+  for (int step = 0; step <= 160; step++) {
+    float current_mA = step * 0.1;
+
+    for (int i = 0; i < 10; i++) {
+      float voltage = readAnalog(A1, 5);
+
+      Serial.print(current_mA, 1);a
       Serial.print(",");
-      Serial.println(random(500));//this will be sensor reading
+      Serial.println(voltage, 4);
+
+      delay(100);
     }
+
+    Serial.println("-------------------");
+
+    delay(4000); // time adjust generator
   }
-  ledcWrite(pwmChannel, 0);
-  while(true);
+
+  while (true); // stop after one full sweep
 }
