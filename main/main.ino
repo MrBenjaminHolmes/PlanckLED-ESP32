@@ -25,7 +25,7 @@ void loop() {
   delay(5000);
 
   while (true) {
-    float Vin = readAnalog(A0, 10);   // before resistor
+    float Vin = readAnalog(A0, 10);   // resistor
     float Vled = readAnalog(A1, 10);  // across LED
 
     float current_mA = ((Vin - Vled) / 220.0) * 1000.0;
